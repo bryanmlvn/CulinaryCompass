@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "325381633879",
+    "project_id": "customercompass-android",
+    "storage_bucket": "customercompass-android.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:325381633879:android:f5732e45617880176f7012",
+        "android_client_info": {
+          "package_name": "com.example.culinarycompass"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlnq0V17zHqyRt3HRS4sx3HHY_SeZgm4U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
