@@ -1,5 +1,6 @@
 package com.example.culinarycompass;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -55,7 +56,10 @@ public class LoginActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     // SEMENTARA PAKE TOAST DULU
-                                    Toast.makeText(getApplicationContext(), "Login Successful", Toast.LENGTH_SHORT).show();
+                                    Intent pindahHome = new Intent(LoginActivity.this, HomeActivity.class);
+                                    pindahHome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(pindahHome);
+                                    finish();
                                 } else {
 
                                     // SEMENTARA PAKE TOAST DULU
