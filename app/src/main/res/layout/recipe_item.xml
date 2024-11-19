@@ -81,7 +81,7 @@
         android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/itemServingTimeTV"
-        app:srcCompat="@drawable/ic_food" />
+        app:srcCompat="@drawable/ic_peoples" />
 
     <TextView
         android:id="@+id/itemServingsTV"

@@ -18,10 +18,13 @@ import java.util.List;
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdapterHolder> {
     private List<RecipeData> recipeList;
     private Context context;
+    private final RecyclerViewInterface recyclerViewInterface;
 
-    public RecipeAdapter(List<RecipeData> recipeList, Context context) {
+
+    public RecipeAdapter(List<RecipeData> recipeList, Context context, RecyclerViewInterface recyclerViewInterface) {
         this.recipeList = recipeList;
         this.context = context;
+        this.recyclerViewInterface =recyclerViewInterface;
     }
 
     @NonNull
@@ -40,6 +43,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
         Glide.with(holder.itemView.getContext())
                 .load(recipeList.get(position).getImage()) // Pass the image URL here
                 .into(holder.itemImageIV);
+
     }
 
     @Override
@@ -57,6 +61,18 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeAdap
             itemServingTimeTV = itemView.findViewById(R.id.itemServingTimeTV);
             itemServingsTV = itemView.findViewById(R.id.itemServingsTV);
             itemImageIV = itemView.findViewById(R.id.itemImageIV);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(recyclerViewInterface != null){
+                        int pos = getAdapterPosition();
+                        if(pos != RecyclerView.NO_POSITION){
+                            recyclerViewInterface.onItemClick(pos);
+                        }
+                    }
+                }
+            });
         }
     }
 }

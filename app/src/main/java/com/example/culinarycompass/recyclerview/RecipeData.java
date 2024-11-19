@@ -1,5 +1,7 @@
 package com.example.culinarycompass.recyclerview;
 
+import java.util.List;
+
 public class RecipeData {
     private int id;
     private String image;
@@ -7,8 +9,9 @@ public class RecipeData {
     private String summary;
     private String servingTime;
     private String servingJumlah;
+    private List<String> instructions;
 
-    public RecipeData(int id, String image, String title, String summary, String servingTime, String servingJumlah) {
+    public RecipeData(int id, String image, String title, String summary, String servingTime, String servingJumlah,List<String> instructions ) {
         this.id = id;
         this.image = image;
         this.title = title;
@@ -25,7 +28,13 @@ public class RecipeData {
     public void setId(int id) {
         this.id = id;
     }
+    public List<String> getInstructions() {
+        return instructions;
+    }
 
+    public void setInstructions(List<String> instructions) {
+        this.instructions = instructions;
+    }
     public String getImage() {
         return image;
     }
@@ -66,13 +75,6 @@ public class RecipeData {
         this.servingJumlah = servingJumlah;
     }
 
-    public String getInstructions() {
-        return instructions;
-    }
 
-    public void setInstructions(String instructions) {
-        this.instructions = instructions;
-    }
 
-    private String instructions;
 }
