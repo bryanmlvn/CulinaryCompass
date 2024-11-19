@@ -1,5 +1,7 @@
 package com.example.culinarycompass;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.culinarycompass.databinding.ActivityHomeBinding;
 import com.example.culinarycompass.databinding.ActivityMainBinding;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class HomeActivity extends AppCompatActivity {
     ActivityHomeBinding binding;
@@ -64,5 +67,22 @@ public class HomeActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.frame_layout, fragment)
                 .commit();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        super.onStart();
+        SharedPreferences sharedPreferences = getSharedPreferences("CulinaryCompassPrefs", MODE_PRIVATE);
+        long loginTime = sharedPreferences.getLong("login_time", 0);
+        long currentTime = System.currentTimeMillis();
+
+        if (currentTime - loginTime > 24 * 60 * 60 * 1000) {
+            // Session expired, log out the user
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 }
