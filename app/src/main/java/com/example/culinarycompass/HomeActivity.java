@@ -15,27 +15,35 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.culinarycompass.databinding.ActivityHomeBinding;
-import com.example.culinarycompass.databinding.ActivityMainBinding;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class HomeActivity extends AppCompatActivity {
     ActivityHomeBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding =  ActivityHomeBinding.inflate(getLayoutInflater());
+        binding = ActivityHomeBinding.inflate(getLayoutInflater());
         EdgeToEdge.enable(this);
         setContentView(binding.getRoot());
+
+        // Handle system bar insets
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Set up the toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Load the default fragment
         if (savedInstanceState == null) {
             loadFragment(new HomeFragment());
         }
+
+        // Handle bottom navigation item selection
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.home) {
                 loadFragment(new HomeFragment());
@@ -61,8 +69,6 @@ public class HomeActivity extends AppCompatActivity {
         return true;
     }
 
-
-
     private void loadFragment(androidx.fragment.app.Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.frame_layout, fragment)
@@ -72,17 +78,33 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        super.onStart();
+
         SharedPreferences sharedPreferences = getSharedPreferences("CulinaryCompassPrefs", MODE_PRIVATE);
         long loginTime = sharedPreferences.getLong("login_time", 0);
+
+        // If login_time is not set or invalid, return early
+        if (loginTime == 0) {
+            return;
+        }
+
         long currentTime = System.currentTimeMillis();
 
+        // Check if the session has expired (24 hours)
         if (currentTime - loginTime > 24 * 60 * 60 * 1000) {
             // Session expired, log out the user
             FirebaseAuth.getInstance().signOut();
+
+            // Redirect to the login screen
             Intent intent = new Intent(HomeActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
         }
+    }
+
+    // Ensure this method is called during user login to store the login time
+    public static void setLoginTime(SharedPreferences sharedPreferences) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putLong("login_time", System.currentTimeMillis());
+        editor.apply();
     }
 }
