@@ -16,6 +16,20 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar3"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:background="#8DA0F8"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="?attr/actionBarTheme"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:title="Culinary Compass"
+                app:navigationIcon="@drawable/baseline_arrow_back_ios_24"
+                app:titleMarginStart="30dp" />
+
             <TextView
                 android:id="@+id/detailTitleTV"
                 android:layout_width="0dp"
@@ -35,10 +49,10 @@
                 android:id="@+id/detailImageIV"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
-                android:layout_marginTop="65dp"
+                android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar3"
                 app:srcCompat="@drawable/ic_launcher_background" />
 
             <ImageView
@@ -107,4 +121,5 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
 </LinearLayout>

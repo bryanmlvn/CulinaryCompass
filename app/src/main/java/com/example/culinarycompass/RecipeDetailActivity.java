@@ -7,18 +7,23 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.FragmentActivity;
 
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class RecipeDetailActivity extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_recipe_detail);
@@ -27,6 +32,16 @@ public class RecipeDetailActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        Toolbar toolbar = findViewById(R.id.toolbar3);
+        toolbar.setNavigationOnClickListener(v -> {
+            // balik ke HomeActivity
+            Intent intent = new Intent(RecipeDetailActivity.this, HomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish(); // Tutup activity sekarang
+        });
+
         TextView detailTitleTV, detailServingTimeTV, detailServingsTV, detailInstructionsTV, detailSummaryTV;
         ImageView detailImageIV;
         detailTitleTV = findViewById(R.id.detailTitleTV);
@@ -58,5 +73,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
             }
             detailInstructionsTV.setText("INSTRUCTIONS: " + instructionText.toString().trim());
         }
+
     }
+
 }

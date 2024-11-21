@@ -12,12 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
+        android:background="#8DA0F8"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:logo="@drawable/ic_favorite"
+        app:logo="@drawable/ic_home"
         app:title="Culinary Compass"
-        app:titleMarginStart="30dp"
-        android:background="#8DA0F8"/>
+        app:titleMarginStart="30dp" />
     <FrameLayout
         android:id="@+id/frame_layout"
         android:layout_width="0dp"
