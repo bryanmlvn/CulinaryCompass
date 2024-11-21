@@ -11,12 +11,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.FragmentActivity;
 
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
-import java.util.Objects;
+
 
 public class RecipeDetailActivity extends AppCompatActivity {
 
@@ -39,7 +38,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
             Intent intent = new Intent(RecipeDetailActivity.this, HomeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-            finish(); // Tutup activity sekarang
+            finish(); // Tutup activity
         });
 
         TextView detailTitleTV, detailServingTimeTV, detailServingsTV, detailInstructionsTV, detailSummaryTV;
