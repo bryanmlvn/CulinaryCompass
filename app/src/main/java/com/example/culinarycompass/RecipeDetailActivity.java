@@ -41,6 +41,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
             finish(); // Tutup activity
         });
 
+
         TextView detailTitleTV, detailServingTimeTV, detailServingsTV, detailInstructionsTV, detailSummaryTV;
         ImageView detailImageIV;
         detailTitleTV = findViewById(R.id.detailTitleTV);
