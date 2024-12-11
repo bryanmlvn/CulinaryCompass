@@ -18,9 +18,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,10 +36,14 @@ public class RegisterActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance(); // Initialize Firestore here
+
         EditText registerEmailET = findViewById(R.id.registerEmailET);
         EditText registerPasswordET = findViewById(R.id.registerPasswordET);
         EditText confirmRegisterET = findViewById(R.id.registerConfirmPasswordET);
+        EditText registerNameET = findViewById(R.id.registerNameET);
         Button registerRegisterBtn = findViewById(R.id.registerRegisterBtn);
 
         registerRegisterBtn.setOnClickListener(new View.OnClickListener() {
@@ -43,7 +52,6 @@ public class RegisterActivity extends AppCompatActivity {
                 String email = registerEmailET.getText().toString().trim();
                 String password = registerPasswordET.getText().toString().trim();
                 String confirmPassword = confirmRegisterET.getText().toString().trim();
-
 
                 if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Please fill all fields", Toast.LENGTH_SHORT).show();
@@ -60,21 +68,31 @@ public class RegisterActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    Intent pindahHome = new Intent(RegisterActivity.this, HomeActivity.class);
-                                    pindahHome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    startActivity(pindahHome);
-                                    finish();
-                                    //tes
+                                    String userId = mAuth.getCurrentUser().getUid();
+                                    String name = registerNameET.getText().toString().trim();
+
+                                    Map<String, Object> user = new HashMap<>();
+                                    user.put("userId", userId);
+                                    user.put("name", name);
+
+                                    db.collection("users")
+                                            .document(userId)
+                                            .set(user)
+                                            .addOnSuccessListener(aVoid -> {
+                                                Intent pindahHome = new Intent(RegisterActivity.this, HomeActivity.class);
+                                                pindahHome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                startActivity(pindahHome);
+                                                finish();
+                                            })
+                                            .addOnFailureListener(e ->
+                                                    Toast.makeText(getApplicationContext(), "Failed to save user data: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                                            );
                                 } else {
-                                    //SEMENTARA GES
                                     Toast.makeText(getApplicationContext(), "Registration Failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
             }
-
         });
-
-
     }
 }
