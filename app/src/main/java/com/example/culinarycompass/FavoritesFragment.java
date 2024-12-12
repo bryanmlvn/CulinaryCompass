@@ -1,64 +1,102 @@
 package com.example.culinarycompass;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link FavoritesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class FavoritesFragment extends Fragment {
+import com.example.culinarycompass.recyclerview.RecipeAdapter;
+import com.example.culinarycompass.recyclerview.RecipeData;
+import com.example.culinarycompass.recyclerview.RecyclerViewInterface;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+import java.util.ArrayList;
+import java.util.List;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+public class FavoritesFragment extends Fragment implements RecyclerViewInterface {
+
+    private RecyclerView favoritesRecipeRV;
+    private Context context;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private RecipeAdapter adapter;
+    private List<RecipeData> favoriteList = new ArrayList<>();
 
     public FavoritesFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FavoritesFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FavoritesFragment newInstance(String param1, String param2) {
-        FavoritesFragment fragment = new FavoritesFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favorites, container, false);
+        View view = inflater.inflate(R.layout.fragment_favorites, container, false);
+
+        // Initialize Firebase
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
+        // Initialize RecyclerView
+        favoritesRecipeRV = view.findViewById(R.id.favoritesRecipeRV);
+        context = getContext();
+        adapter = new RecipeAdapter(favoriteList, context, this);
+        favoritesRecipeRV.setLayoutManager(new LinearLayoutManager(context));
+        favoritesRecipeRV.setAdapter(adapter);
+
+        // Fetch favorite recipes
+        fetchFavorites();
+
+        return view;
+    }
+
+    private void fetchFavorites() {
+        String userId = mAuth.getCurrentUser().getUid();
+        CollectionReference favoritesRef = db.collection("users").document(userId).collection("favorites");
+
+        favoritesRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                QuerySnapshot querySnapshot = task.getResult();
+                if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                    for (DocumentSnapshot document : querySnapshot) {
+                        RecipeData recipe = document.toObject(RecipeData.class);
+                        favoriteList.add(recipe);
+                    }
+                    adapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(context, "No favorites found", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(context, "Failed to fetch favorites", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        Intent pindahDetail = new Intent(context, FavoriteDetailActivity.class);
+
+        // Pass data to RecipeDetailActivity
+        RecipeData recipe = favoriteList.get(position);
+        String recipeId = String.valueOf(recipe.getId());
+        pindahDetail.putExtra("recipeId", recipeId);
+        pindahDetail.putExtra("title", recipe.getTitle());
+        pindahDetail.putExtra("image", recipe.getImage());
+        pindahDetail.putExtra("servingTime", recipe.getServingTime());
+        pindahDetail.putExtra("servings", recipe.getServingJumlah());
+        pindahDetail.putExtra("instructions", new ArrayList<>(recipe.getInstructions())); // Pass list as ArrayList
+        pindahDetail.putExtra("summary", recipe.getSummary());
+        startActivity(pindahDetail);
     }
 }
