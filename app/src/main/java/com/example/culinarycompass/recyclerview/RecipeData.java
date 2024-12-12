@@ -10,7 +10,8 @@ public class RecipeData {
     private String servingTime;
     private String servingJumlah;
     private List<String> instructions;
-
+    public RecipeData() {
+    }
     public RecipeData(int id, String image, String title, String summary, String servingTime, String servingJumlah,List<String> instructions ) {
         this.id = id;
         this.image = image;

@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RecipeDetailActivity">
+    tools:context=".FavoriteDetailActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -31,7 +31,7 @@
                 app:titleMarginStart="30dp" />
 
             <TextView
-                android:id="@+id/detailTitleTV"
+                android:id="@+id/favTitleTV"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
@@ -43,10 +43,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/detailImageIV" />
+                app:layout_constraintTop_toBottomOf="@+id/favImageIV" />
 
             <ImageView
-                android:id="@+id/detailImageIV"
+                android:id="@+id/favImageIV"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_marginTop="16dp"
@@ -62,18 +62,18 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="12dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/detailTitleTV"
+                app:layout_constraintTop_toBottomOf="@+id/favTitleTV"
                 app:srcCompat="@drawable/ic_time" />
 
             <TextView
-                android:id="@+id/detailServingTimeTV"
+                android:id="@+id/favServingTimeTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="12dp"
                 android:text="TextView"
                 app:layout_constraintStart_toEndOf="@+id/imageView3"
-                app:layout_constraintTop_toBottomOf="@+id/detailTitleTV" />
+                app:layout_constraintTop_toBottomOf="@+id/favTitleTV" />
 
             <ImageView
                 android:id="@+id/imageView5"
@@ -81,22 +81,22 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="12dp"
-                app:layout_constraintStart_toEndOf="@+id/detailServingTimeTV"
-                app:layout_constraintTop_toBottomOf="@+id/detailTitleTV"
+                app:layout_constraintStart_toEndOf="@+id/favServingTimeTV"
+                app:layout_constraintTop_toBottomOf="@+id/favTitleTV"
                 app:srcCompat="@drawable/ic_peoples" />
 
             <TextView
-                android:id="@+id/detailServingsTV"
+                android:id="@+id/favServingsTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="12dp"
                 android:text="TextView"
                 app:layout_constraintStart_toEndOf="@+id/imageView5"
-                app:layout_constraintTop_toBottomOf="@+id/detailTitleTV" />
+                app:layout_constraintTop_toBottomOf="@+id/favTitleTV" />
 
             <TextView
-                android:id="@+id/detailSummaryTV"
+                android:id="@+id/favSummaryTV"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
@@ -108,7 +108,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
             <TextView
-                android:id="@+id/detailInstructionsTV"
+                android:id="@+id/favInstructionsTV"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
@@ -117,17 +117,17 @@
                 android:text="TextView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/detailSummaryTV" />
+                app:layout_constraintTop_toBottomOf="@+id/favSummaryTV" />
 
             <Button
-                android:id="@+id/detailSaveBtn"
+                android:id="@+id/favDeleteBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:text="Save"
+                android:text="Remove from Favorites"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/detailInstructionsTV" />
+                app:layout_constraintTop_toBottomOf="@+id/favInstructionsTV" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
