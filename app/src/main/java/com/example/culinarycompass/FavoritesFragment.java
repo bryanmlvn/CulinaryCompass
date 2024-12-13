@@ -1,7 +1,9 @@
 package com.example.culinarycompass;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -61,6 +63,13 @@ public class FavoritesFragment extends Fragment implements RecyclerViewInterface
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Refresh the favorites list when the fragment becomes visible again
+        fetchFavorites();
+    }
+
     private void fetchFavorites() {
         String userId = mAuth.getCurrentUser().getUid();
         CollectionReference favoritesRef = db.collection("users").document(userId).collection("favorites");
@@ -68,6 +77,7 @@ public class FavoritesFragment extends Fragment implements RecyclerViewInterface
         favoritesRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 QuerySnapshot querySnapshot = task.getResult();
+                favoriteList.clear(); // Clear the existing list
                 if (querySnapshot != null && !querySnapshot.isEmpty()) {
                     for (DocumentSnapshot document : querySnapshot) {
                         RecipeData recipe = document.toObject(RecipeData.class);
@@ -75,6 +85,8 @@ public class FavoritesFragment extends Fragment implements RecyclerViewInterface
                     }
                     adapter.notifyDataSetChanged();
                 } else {
+                    favoriteList.clear(); // Ensure the list is empty if no favorites are found
+                    adapter.notifyDataSetChanged();
                     Toast.makeText(context, "No favorites found", Toast.LENGTH_SHORT).show();
                 }
             } else {

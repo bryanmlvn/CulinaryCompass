@@ -21,7 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class ProfileFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private TextView profileNameTV;
+    private TextView profileNameTV, emailNameTV;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -41,11 +41,12 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         // Initialize UI components
-        profileNameTV = view.findViewById(R.id.profileNameTV); // Ensure this ID matches your TextView in XML
+        profileNameTV = view.findViewById(R.id.profileNameTV);
+        emailNameTV = view.findViewById(R.id.profileEmailTV);
         Button profileLogoutBTN = view.findViewById(R.id.profileLogoutBTN);
 
-        // Fetch and display the user's name
-        fetchAndDisplayUserName();
+        // Fetch and display the user's name and email
+        fetchAndDisplayUserInfo();
 
         // Logout button functionality
         profileLogoutBTN.setOnClickListener(new View.OnClickListener() {
@@ -71,7 +72,17 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-    private void fetchAndDisplayUserName() {
+    private void fetchAndDisplayUserInfo() {
+        // Fetch the email of the current user from FirebaseAuth
+        String userEmail = mAuth.getCurrentUser().getEmail();
+
+        if (userEmail != null) {
+            emailNameTV.setText(userEmail); // Set the email in the TextView
+        } else {
+            Toast.makeText(getContext(), "Email not found", Toast.LENGTH_SHORT).show();
+        }
+
+        // Fetch the user's name from Firestore (already implemented)
         String userId = mAuth.getCurrentUser().getUid();
         db.collection("users")
                 .document(userId)

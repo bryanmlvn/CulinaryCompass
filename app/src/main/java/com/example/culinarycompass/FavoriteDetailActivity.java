@@ -72,9 +72,39 @@ public class FavoriteDetailActivity extends AppCompatActivity {
         }
 
         // Delete button click listener
-        favDeleteBtn.setOnClickListener(v -> deleteFromFavorites(recipeId));
+        favDeleteBtn.setOnClickListener(v -> deleteFromFavorites(title));
     }
 
-    private void deleteFromFavorites(String recipeId) {
+    private void deleteFromFavorites(String title) {
+        // Get the current user's UID
+        String userId = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : null;
 
-}}
+        if (userId == null) {
+            Toast.makeText(this, "User not logged in. Please log in to delete favorites.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Reference to the recipe document in the user's favorites subcollection
+        DocumentReference recipeRef = db.collection("users")
+                .document(userId)
+                .collection("favorites")
+                .document(title); // Using title as the document ID
+
+        // Delete the document
+        recipeRef.delete()
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Recipe removed from favorites!", Toast.LENGTH_SHORT).show();
+
+                    // Notify the FavoritesFragment to refresh
+                    Intent intent = new Intent();
+                    intent.setAction("com.example.culinarycompass.REFRESH_FAVORITES");
+                    sendBroadcast(intent);
+
+                    finish(); // Optionally, you can finish the activity after deletion
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Failed to remove recipe: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+}

@@ -2,6 +2,7 @@ package com.example.culinarycompass;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -60,6 +61,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
         // Get data from intent
         Intent intent = getIntent();
+        Integer recipeId = intent.getIntExtra("recipeId", -1);
         String title = intent.getStringExtra("title");
         String image = intent.getStringExtra("image");
         String servingTime = intent.getStringExtra("servingTime");
@@ -100,8 +102,9 @@ public class RecipeDetailActivity extends AppCompatActivity {
         db.collection("users")
                 .document(userId)
                 .collection("favorites")
-                .add(createRecipeData(title, image, servings, servingTime, summary, instructions))
-                .addOnSuccessListener(documentReference -> {
+                .document(title) // Use the title as the document ID
+                .set(createRecipeData(title, image, servings, servingTime, summary, instructions))
+                .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "Recipe saved to favorites!", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
