@@ -160,7 +160,8 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
 
         // Pass data to RecipeDetailActivity
         RecipeData recipe = recipeList.get(position);
-        pindahDetail.putExtra("id", recipe.getId());
+        Integer recipeId = recipe.getId();
+        pindahDetail.putExtra("recipeId", recipeId);
         pindahDetail.putExtra("title", recipe.getTitle());
         pindahDetail.putExtra("image", recipe.getImage());
         pindahDetail.putExtra("servingTime", recipe.getServingTime());
