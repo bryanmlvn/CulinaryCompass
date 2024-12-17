@@ -17,6 +17,11 @@
         app:srcCompat="@drawable/logowithtext" />
 
     <EditText
+        android:background="@drawable/edittext_border"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
         android:id="@+id/loginNameET"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -24,7 +29,7 @@
         android:layout_marginEnd="60dp"
         android:layout_marginBottom="20dp"
         android:ems="10"
-        android:hint="E-Mail"
+        android:hint="E-mail"
         android:inputType="text"
         app:layout_constraintBottom_toTopOf="@+id/loginPasswordET"
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,6 +38,11 @@
     <EditText
         android:id="@+id/loginPasswordET"
         android:layout_width="0dp"
+        android:background="@drawable/edittext_border"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
         android:layout_marginEnd="60dp"
@@ -52,6 +62,7 @@
         android:layout_marginEnd="60dp"
         android:layout_marginBottom="50dp"
         android:text="Login"
+        android:backgroundTint="#0b101a"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
