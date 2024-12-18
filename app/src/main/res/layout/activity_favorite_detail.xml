@@ -21,13 +21,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="8dp"
-                android:background="#8DA0F8"
+                android:background="#FFFFFF"
                 android:minHeight="?attr/actionBarSize"
                 android:theme="?attr/actionBarTheme"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:title="Culinary Compass"
                 app:navigationIcon="@drawable/baseline_arrow_back_ios_24"
+                app:title="Culinary Compass"
                 app:titleMarginStart="30dp" />
 
             <TextView
@@ -125,6 +125,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:text="Remove from Favorites"
+                android:backgroundTint="#0b101a"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/favInstructionsTV" />
