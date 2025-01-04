@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +23,9 @@ public class ProfileFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private TextView profileNameTV, emailNameTV;
+    private EditText profileNameEditET;
+    private Button profileEditBTN, profileLogoutBTN;
+
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -43,11 +47,14 @@ public class ProfileFragment extends Fragment {
         // Initialize UI components
         profileNameTV = view.findViewById(R.id.profileNameTV);
         emailNameTV = view.findViewById(R.id.profileEmailTV);
-        Button profileLogoutBTN = view.findViewById(R.id.profileLogoutBTN);
+        profileNameEditET = view.findViewById(R.id.profileNameEditET);
+        profileEditBTN = view.findViewById(R.id.profileEditBTN);
+        profileLogoutBTN = view.findViewById(R.id.profileLogoutBTN);
 
         // Fetch and display the user's name and email
         fetchAndDisplayUserInfo();
 
+        profileEditBTN.setOnClickListener(v -> toggleEditMode());
         // Logout button functionality
         profileLogoutBTN.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +99,9 @@ public class ProfileFragment extends Fragment {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
                             String name = documentSnapshot.getString("name");
+                            String email = mAuth.getCurrentUser().getEmail();
                             profileNameTV.setText(name); // Set the name in the TextView
+                            emailNameTV.setText(email);
                         } else {
                             Toast.makeText(getContext(), "User data not found", Toast.LENGTH_SHORT).show();
                         }
@@ -101,5 +110,38 @@ public class ProfileFragment extends Fragment {
                 .addOnFailureListener(e ->
                         Toast.makeText(getContext(), "Failed to fetch user data: " + e.getMessage(), Toast.LENGTH_SHORT).show()
                 );
+    }
+
+    private void toggleEditMode() {
+        if (profileNameEditET.getVisibility() == View.GONE) {
+            // Enter edit mode
+            profileNameEditET.setText(profileNameTV.getText().toString());
+            profileNameEditET.setVisibility(View.VISIBLE);
+            profileEditBTN.setText("SAVE");
+        } else {
+            // Save changes
+            String newName = profileNameEditET.getText().toString().trim();
+            if (newName.isEmpty()) {
+                Toast.makeText(getContext(), "Name cannot be empty", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            updateUserName(newName);
+        }
+    }
+
+    private void updateUserName(String newName) {
+        String userId = mAuth.getCurrentUser().getUid();
+
+        db.collection("users")
+                .document(userId)
+                .update("name", newName)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(getContext(), "Name updated successfully", Toast.LENGTH_SHORT).show();
+                    profileNameTV.setText(newName);
+                    profileNameEditET.setVisibility(View.GONE);
+                    profileEditBTN.setText("EDIT PROFILE");
+                })
+                .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to update name: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 }
