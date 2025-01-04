@@ -15,6 +15,8 @@ import android.widget.Toast;
 import com.example.culinarycompass.MainActivity;
 import com.example.culinarycompass.R;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -23,9 +25,9 @@ public class ProfileFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private TextView profileNameTV, emailNameTV;
-    private EditText profileNameEditET;
-    private Button profileEditBTN, profileLogoutBTN;
 
+    private EditText profileNameEditET, oldPasswordET, newPasswordET;
+    private Button profileEditNameBTN, profileChangePasswordBTN, profileLogoutBTN;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -48,13 +50,19 @@ public class ProfileFragment extends Fragment {
         profileNameTV = view.findViewById(R.id.profileNameTV);
         emailNameTV = view.findViewById(R.id.profileEmailTV);
         profileNameEditET = view.findViewById(R.id.profileNameEditET);
-        profileEditBTN = view.findViewById(R.id.profileEditBTN);
         profileLogoutBTN = view.findViewById(R.id.profileLogoutBTN);
+        oldPasswordET = view.findViewById(R.id.oldPasswordET);
+        newPasswordET = view.findViewById(R.id.newPasswordET);
+        profileEditNameBTN = view.findViewById(R.id.profileEditNameBTN);
+        profileChangePasswordBTN = view.findViewById(R.id.profileChangePasswordBTN);
 
         // Fetch and display the user's name and email
         fetchAndDisplayUserInfo();
 
-        profileEditBTN.setOnClickListener(v -> toggleEditMode());
+        profileEditNameBTN.setOnClickListener(v -> toggleEditModeForName());
+        profileChangePasswordBTN.setOnClickListener(v -> toggleEditModeForPassword());
+
+
         // Logout button functionality
         profileLogoutBTN.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,12 +120,14 @@ public class ProfileFragment extends Fragment {
                 );
     }
 
-    private void toggleEditMode() {
+    private void toggleEditModeForName() {
         if (profileNameEditET.getVisibility() == View.GONE) {
             // Enter edit mode
             profileNameEditET.setText(profileNameTV.getText().toString());
             profileNameEditET.setVisibility(View.VISIBLE);
-            profileEditBTN.setText("SAVE");
+
+            profileChangePasswordBTN.setVisibility(View.GONE);
+            profileEditNameBTN.setText("SAVE NAME");
         } else {
             // Save changes
             String newName = profileNameEditET.getText().toString().trim();
@@ -130,6 +140,63 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    private void toggleEditModeForPassword() {
+        if (oldPasswordET.getVisibility() == View.GONE) {
+            // Show password fields
+            oldPasswordET.setVisibility(View.VISIBLE);
+            newPasswordET.setVisibility(View.VISIBLE);
+            profileEditNameBTN.setVisibility(View.GONE);
+            profileChangePasswordBTN.setText("SAVE PASSWORD");
+        } else {
+            // Change the password
+            String oldPassword = oldPasswordET.getText().toString().trim();
+            String newPassword = newPasswordET.getText().toString().trim();
+            if (oldPassword.isEmpty() || newPassword.isEmpty()) {
+                Toast.makeText(getContext(), "Both fields are required", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            reauthenticateAndChangePassword(oldPassword, newPassword);
+        }
+    }
+
+    private void reauthenticateAndChangePassword(String oldPassword, String newPassword) {
+        String email = mAuth.getCurrentUser().getEmail();
+        AuthCredential credential = EmailAuthProvider.getCredential(email, oldPassword);
+
+        mAuth.getCurrentUser().reauthenticate(credential)
+                .addOnSuccessListener(aVoid -> {
+                    mAuth.getCurrentUser().updatePassword(newPassword)
+                            .addOnSuccessListener(aVoid1 -> {
+                                // Show success message
+                                Toast.makeText(getContext(), "Password updated successfully", Toast.LENGTH_SHORT).show();
+                                profileEditNameBTN.setVisibility(View.VISIBLE);
+                                // Log out the user immediately after password change
+                                mAuth.signOut();
+
+                                // Clear session and "Remember Me" preference
+                                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("CulinaryCompassPrefs", getContext().MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.remove("remember_me"); // Remove Remember Me preference
+                                editor.remove("login_time"); // Remove login time to reset session
+                                editor.apply();
+
+                                // Redirect to the MainActivity (Login Activity)
+                                Intent intent = new Intent(getActivity(), MainActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Clear the activity stack
+                                startActivity(intent);
+                                getActivity().finish(); // Close the current activity
+                            })
+                            .addOnFailureListener(e -> {
+                                // Handle failure to update password
+                                Toast.makeText(getContext(), "Failed to update password: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    // Handle reauthentication failure
+                    Toast.makeText(getContext(), "Authentication failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
     private void updateUserName(String newName) {
         String userId = mAuth.getCurrentUser().getUid();
 
@@ -140,7 +207,8 @@ public class ProfileFragment extends Fragment {
                     Toast.makeText(getContext(), "Name updated successfully", Toast.LENGTH_SHORT).show();
                     profileNameTV.setText(newName);
                     profileNameEditET.setVisibility(View.GONE);
-                    profileEditBTN.setText("EDIT PROFILE");
+                    profileEditNameBTN.setText("EDIT NAME");
+                    profileChangePasswordBTN.setVisibility(View.VISIBLE);
                 })
                 .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to update name: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
