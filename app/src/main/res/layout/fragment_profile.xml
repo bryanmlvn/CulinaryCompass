@@ -12,67 +12,140 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/profileInfoCard"
-            android:layout_width="379dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_margin="16dp"
             app:cardCornerRadius="16dp"
             app:cardElevation="4dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
+            <LinearLayout
+                android:id="@+id/profileContentLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <ImageView
+                    android:id="@+id/profileImage"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/ic_peoples"
+                    android:scaleType="centerCrop" />
+
+                <TextView
+                    android:id="@+id/profileNameTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:text="Name"
+                    android:textColor="#333333"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/profileNameEditET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:hint="New Name"
+                    android:visibility="gone"
+                    android:background="@drawable/edittext_border"
+                    android:padding="12dp" />
+
+
+                <TextView
+                    android:id="@+id/profileEmailTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="16dp"
+                    android:text="example@domain.org"
+                    android:textColor="#757575"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/oldPasswordET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Old Password"
+                    android:layout_marginTop="16dp"
+                    android:inputType="textPassword"
+                    android:visibility="gone"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:background="@drawable/edittext_border" />
+
+
+                <EditText
+                    android:id="@+id/newPasswordET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="New Password"
+                    android:layout_marginTop="8dp"
+                    android:inputType="textPassword"
+                    android:visibility="gone"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:background="@drawable/edittext_border" />
+
+            </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <Button
             android:id="@+id/profileLogoutBTN"
             android:layout_width="250dp"
             android:layout_height="48dp"
-            android:layout_marginStart="80dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center_horizontal"
             android:backgroundTint="#0b101a"
             android:text="LOGOUT"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/profileInfoCard"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="210dp"
-            android:orientation="vertical"
-            android:padding="16dp"
+        <Button
+            android:id="@+id/profileEditNameBTN"
+            android:layout_width="250dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center_horizontal"
+            android:backgroundTint="#0b101a"
+            android:text="EDIT NAME"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/profileLogoutBTN"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintEnd_toEndOf="parent" />
 
-            <ImageView
-                android:id="@+id/profileImage"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/ic_peoples"
-                android:scaleType="centerCrop" />
-
-            <TextView
-                android:id="@+id/profileNameTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Name"
-                android:textColor="#333333"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/profileEmailTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="example@domain.org"
-                android:textColor="#757575"
-                android:textSize="16sp" />
-
-        </LinearLayout>
+        <Button
+            android:id="@+id/profileChangePasswordBTN"
+            android:layout_width="250dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center_horizontal"
+            android:backgroundTint="#0b101a"
+            android:text="CHANGE PASSWORD"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/profileEditNameBTN"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
